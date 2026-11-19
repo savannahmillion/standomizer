@@ -16,6 +16,19 @@ export function isStampEmoji(value: unknown): value is StampEmoji {
   return typeof value === "string" && value.length <= MAX_EMOJI_LENGTH && SINGLE_EMOJI.test(value);
 }
 
+// Emoji typed or pasted by people often carry an extra (or missing) invisible
+// "show as emoji" character, U+FE0F — the Mac emoji picker adds it to ⛵️ and
+// ☕️, for example. Returns the standard form, or null if it isn't an emoji.
+export function normalizeEmoji(value: string): StampEmoji | null {
+  const ok = (v: string) => v.length <= MAX_EMOJI_LENGTH && SINGLE_EMOJI.test(v);
+  if (ok(value)) return value;
+  const bare = value.replace(/\uFE0F/g, "");
+  if (ok(bare)) return bare;
+  const [first, ...rest] = Array.from(bare);
+  const withSelector = first ? `${first}\uFE0F${rest.join("")}` : "";
+  return ok(withSelector) ? withSelector : null;
+}
+
 // A stamp on today's image. x and y are 0–1, relative to the image, so stamps
 // land in the same spot on every screen size. One stamp per person.
 export type Stamp = { userId: string; x: number; y: number };

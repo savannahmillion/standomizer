@@ -5,5 +5,5 @@ alt: Illustrated existential dread-odometer, with an "x days since last incident
 credit: savannah            # optional
 creditUrl: https://example.com # optional
 contributor: savannah         # optional
-emojis: 👍 👎 😅 ☹️ 🫨 🫪 🤪 😱 🤠 # optional
+emojis: 👍 😅 ☹️ 🫨 🫪 🤪 😱 🤠 0️⃣ # optional
 ---

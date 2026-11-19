@@ -43,6 +43,8 @@ function clean(raw: string): string {
   // Trailing comment: whitespace, "#", then whitespace or end of line. Requiring
   // the space after "#" keeps URL #fragments and the keycap emoji #️⃣ intact.
   if (!quoted) value = value.replace(/\s+#(\s.*)?$/, "");
+  // A value that's only a comment ("credit: # optional") means "no value".
+  if (!quoted && /^#(\s|$)/.test(value)) value = "";
   if (
     value.length >= 2 &&
     ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'")))

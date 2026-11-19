@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import { parseFrontMatter } from "./frontmatter";
-import { isStampEmoji } from "./stamps";
+import { normalizeEmoji } from "./stamps";
 
 // Daily themes live in /themes/*.md — one file per theme, bundled at build
 // time. See themes/README.md for the format.
@@ -69,8 +69,9 @@ function parseEmojis(value: string, warn: (message: string) => void): string[] {
   const rejected: string[] = [];
   for (const { segment } of segmenter.segment(value)) {
     if (/^[\s,]+$/.test(segment)) continue;
-    if (!isStampEmoji(segment)) rejected.push(segment);
-    else if (!out.includes(segment)) out.push(segment);
+    const emoji = normalizeEmoji(segment);
+    if (!emoji) rejected.push(segment);
+    else if (!out.includes(emoji)) out.push(emoji);
   }
   if (rejected.length) warn(`ignoring non-emoji in emojis: ${rejected.join(" ")}`);
   if (out.length > MAX_THEME_EMOJIS) {
